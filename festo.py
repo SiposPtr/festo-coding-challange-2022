@@ -1,23 +1,22 @@
-def main():
+def main(path):
     # data reading
     dataBase = []
     data = {}
-    file = open(r"C:\Users\sipos\Downloads\office_database.txt")
-    
+    file = open(fr"{path}")
+    print(";;;;;;;;;;;;")
     for line in file:
         data["username"] = line.split(',')[0].rstrip().lstrip()
-        data["id"] = line.split(',')[1].rstrip().lstrip()
+        data["id"] = int(line.split(',')[1].rstrip().lstrip())
         data["accessKey"] = int(line.split(',')[2].rstrip().lstrip())
         data["firstLogin"] = line.split(',')[3].rstrip().lstrip()
         dataBase.append(data)
         data = {}
     
-    print(dataBase)
     # puzzle 1: find the person who stole your mug
     # solution for puzzle 1
     countOfPossibleIDs = 0
     for i in range(0,len(dataBase)):
-        if "814" in dataBase[i]["id"]:
+        if "814" in str(dataBase[i]["id"]):
             # print("contains " + dataBase[i]["id"])
             countOfPossibleIDs += int(dataBase[i]["id"])
 
@@ -26,16 +25,10 @@ def main():
 
     # puzzle 2: 
     # solution for puzzle 2
-    # each person only has access to some part of the station
-    # parts a person van enter are decoded in their access key
-    # station has 8 modules (1,2,3...8)
-    # for each module either has access (1) or has no access (0)
-    # ex: person with access to module 3 and 7 will have a binary number 00100010.So this person's access key is 34 (the decimal representation of 00100010).
-    # kitchen is in module 5.
-    # return the sum of ID numbers who have access to module 5
-
-    # acces key needs to be convert a binary number
-    # ex 34 -> 100010 
+    # access key is a number
+    # convert it to binary and every one means that the person has access to that room or st
+    # sum of the id numbers where the fifth digit is 1
+    
     sumOfDecimal = 0
     sum = 0
     uj = 0
@@ -65,6 +58,37 @@ def main():
     print(sum)
     print(len(kell))
 
+    # skipped it lol idk what is this
+
+    # puzzle 3
+    # at 7.14 the mug was already stolen
+    # so it was stolen before that
+    # if person has not yet logged in today, the time is 99:99
+    # sum of the id numbers who logged in before 7:14
+    sumagain = 0
+    cuccc = []
+    
+    for i in range(0, len(dataBase)):
+        hour = int(dataBase[i]["firstLogin"].split(":")[0])
+        minute = int(dataBase[i]["firstLogin"].split(":")[1])
+        if hour <= 7:
+            # ez nem jo sztem
+            if minute < 14:
+                print("7.14 elotti")
+                print(dataBase[i])
+                try:
+                    print("ff")
+                    print(str(format(int(dataBase[i]['accessKey']), "b"))[4])
+                    if str(format(int(dataBase[i]['accessKey']), "b"))[4] == 1:
+                        sumagain += dataBase[i]["id"]
+                        if dataBase[i]["id"] not in cuccc:
+                            cuccc.append(dataBase[i]["id"])
+                except IndexError:
+                    pass
+    print(sumagain)
+    print(len(cuccc))
+
 if __name__ == "__main__":
-    main()
+    file = 'C:\\Users\\sipos\\Downloads\\office_database.txt' # path should be formatted with double backslashes
+    main(file)
 
